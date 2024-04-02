@@ -1,29 +1,19 @@
-import express, { Express, Request, Response } from "express";
-
-import db from "./connection";
-import util from 'util'
-
-const query: any = util.promisify(db.query).bind(db)
+import express, { Express, NextFunction, Request, Response } from "express";
+import router from "./routers";
 
 const app: Express = express()
-app.use(express.json())
 const port = 3000
+app.use(router)
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('<h1>Hallo</h1>')
-})
-
-app.get('/passenger', async (req: Request, res: Response): Promise<void> => {
-    try {
-       const findPassangers = await query ('SELECT * FROM passenger')
-       res.status(200).send({
-        error: false,
-        message: 'success',
-        data: findPassangers
-       })
-    } catch (error) {
-        console.log(error)
-    }
+// CENTRALIZED ERROR
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    res
+    .status(err.status || 500)
+    .send({
+        error: true,
+        message: err.message || 'Error',
+        data: {}
+    })
 })
 
 app.listen(port, () => {

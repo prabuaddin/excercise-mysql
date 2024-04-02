@@ -1,0 +1,55 @@
+USE titanic;
+SELECT * FROM titanic;
+
+SELECT COUNT(*) as total_survived, Survived  FROM titanic
+GROUP BY Survived;
+
+-- GROUP BY
+SELECT * FROM  titanic;
+SELECT COUNT(*) as total_class, Pclass FROM titanic
+GROUP BY Pclass;
+
+-- Order By
+SELECT * FROM titanic
+ORDER BY Age DESC;
+
+-- HAVING
+-- Hitung jumlah penumpang di setiap class
+SELECT COUNT(*) as Total_Pclass, Pclass FROM titanic
+GROUP BY Pclass
+HAVING Total_Pclass > 100;
+
+-- LIMIT & OFFSET
+SELECT * FROM titanic
+LIMIT 10;
+
+SELECT * FROM titanic
+LIMIT 10 OFFSET 3;
+
+-- SUBQUERY ---> Query di dalam query
+-- Mendapatkan umur pria yang diatas rata-rata umur seluruh penumpang
+
+SELECT * FROM titanic WHERE Sex = 'male' AND Age >
+(SELECT AVG(Age) FROM titanic);
+
+-- 1. Ambil 1 data penumpang yang memiliki umur paling tua
+SELECT MAX(Age) as Umur_Tertua FROM titanic;
+
+-- 2. Hitung Total Penumpang Yang meninggal di masing2 class
+
+SELECT COUNT(*) FROM passangers 
+WHERE Survived = 1
+GROUP BY Pclass;
+
+-- 3. Hitung Rata2 Tiket Masing2 class
+SELECT AVG(Fare) FROM titanic
+GROUP BY Pclass;
+
+
+-- 4. Ambil data penumpang yang harga tiketnya diatas rata-rata harga tiket seluruh penumpang
+SELECT AVG(Fare) as Harga_Tiket_Rata_Rata, Name FROM titanic
+GROUP BY Name
+HAVING Harga_Tiket_Rata_Rata;
+
+-- 5. Ambil data penumpang ke-5 yang membayar fare paling mahal
+SELECT * FROM titanic ORDER BY Fare DESC LIMIT 1 OFFSET 4
